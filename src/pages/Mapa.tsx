@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, CircleMarker } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { MapPin, AlertCircle, Search as SearchIcon, Heart, PawPrint, Filter } from "lucide-react";
@@ -201,37 +201,22 @@ const Mapa = () => {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   />
                   {visibles.map((r) => (
-                    <div key={r.id}>
-                      <CircleMarker
-                        center={[r.lat, r.lng]}
-                        radius={22}
-                        pathOptions={{
-                          color: TYPE_META[r.type].color,
-                          fillColor: TYPE_META[r.type].color,
-                          fillOpacity: 0.15,
-                          weight: 1,
-                        }}
-                      />
-                      <Marker position={[r.lat, r.lng]} icon={makeIcon(r.type)}>
-                        <Popup>
-                          <div className="min-w-[200px]">
-                            <p className="text-[10px] uppercase tracking-widest font-bold" style={{ color: TYPE_META[r.type].color }}>
-                              {TYPE_META[r.type].label} · {r.id}
-                            </p>
-                            <p className="font-display text-base font-bold mt-1">{r.nombre}</p>
-                            <p className="text-xs text-muted-foreground">{r.especie} · {r.zona}</p>
-                            <p className="text-xs mt-2">{r.descripcion}</p>
-                            <p className="text-[10px] text-muted-foreground mt-2">{r.fecha}</p>
-                            <Link
-                              to="/reportar"
-                              className="inline-block mt-3 text-xs font-semibold text-primary hover:underline"
-                            >
-                              Tengo información →
-                            </Link>
-                          </div>
-                        </Popup>
-                      </Marker>
-                    </div>
+                    <Marker key={r.id} position={[r.lat, r.lng]} icon={makeIcon(r.type)}>
+                      <Popup>
+                        <div className="min-w-[200px]">
+                          <p className="text-[10px] uppercase tracking-widest font-bold" style={{ color: TYPE_META[r.type].color }}>
+                            {TYPE_META[r.type].label} · {r.id}
+                          </p>
+                          <p className="font-display text-base font-bold mt-1">{r.nombre}</p>
+                          <p className="text-xs text-muted-foreground">{r.especie} · {r.zona}</p>
+                          <p className="text-xs mt-2">{r.descripcion}</p>
+                          <p className="text-[10px] text-muted-foreground mt-2">{r.fecha}</p>
+                          <Link to="/reportar" className="inline-block mt-3 text-xs font-semibold text-primary hover:underline">
+                            Tengo información →
+                          </Link>
+                        </div>
+                      </Popup>
+                    </Marker>
                   ))}
                 </MapContainer>
               </div>
