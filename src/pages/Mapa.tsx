@@ -1,27 +1,11 @@
 import { useMemo, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-import { MapPin, AlertCircle, Search as SearchIcon, PawPrint, Filter } from "lucide-react";
+import { MapPin, AlertCircle, Search as SearchIcon, PawPrint, Filter, type LucideIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import InteractiveReportMap, { type ReportType, type Reporte } from "@/components/reports/InteractiveReportMap";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
-type ReportType = "perdida" | "encontrada" | "urgente";
-
-interface Reporte {
-  id: string;
-  type: ReportType;
-  nombre: string;
-  especie: string;
-  zona: string;
-  fecha: string;
-  descripcion: string;
-  lat: number;
-  lng: number;
-}
 
 const REPORTES: Reporte[] = [
   { id: "R-482", type: "urgente",    nombre: "Perro herido",  especie: "Perro", zona: "Av. Costanera",   fecha: "Hoy 10:24",   descripcion: "Mestizo café, herido en pata trasera. Necesita atención veterinaria urgente.", lat: -41.4689, lng: -72.9411 },
@@ -32,29 +16,10 @@ const REPORTES: Reporte[] = [
   { id: "R-488", type: "urgente",    nombre: "Camada gatos",  especie: "Gato",  zona: "Chinquihue",      fecha: "Hoy 08:00",   descripcion: "4 gatitos abandonados, necesitan refugio inmediato.",                          lat: -41.5102, lng: -73.0210 },
 ];
 
-const TYPE_META: Record<ReportType, { label: string; color: string; icon: typeof AlertCircle }> = {
+const TYPE_META: Record<ReportType, { label: string; color: string; icon: LucideIcon }> = {
   urgente:    { label: "Urgente",    color: "hsl(var(--destructive))", icon: AlertCircle },
   perdida:    { label: "Perdida",    color: "hsl(var(--primary))",     icon: SearchIcon },
   encontrada: { label: "Encontrada", color: "hsl(var(--secondary))",   icon: PawPrint },
-};
-
-const makeIcon = (type: ReportType) => {
-  const color = TYPE_META[type].color;
-  return L.divIcon({
-    className: "",
-    html: `
-      <div style="position:relative;width:36px;height:46px;">
-        <div style="position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;">
-          <svg width="36" height="46" viewBox="0 0 36 46" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18 0C8.06 0 0 8.06 0 18c0 13.5 18 28 18 28s18-14.5 18-28C36 8.06 27.94 0 18 0z" fill="${color}"/>
-            <circle cx="18" cy="18" r="7" fill="white"/>
-          </svg>
-        </div>
-      </div>`,
-    iconSize: [36, 46],
-    iconAnchor: [18, 46],
-    popupAnchor: [0, -42],
-  });
 };
 
 const Mapa = () => {
@@ -88,7 +53,6 @@ const Mapa = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
 
-      {/* Hero */}
       <section className="bg-gradient-hero text-primary-foreground">
         <div className="container mx-auto py-14 md:py-20">
           <div className="max-w-3xl">
@@ -106,11 +70,9 @@ const Mapa = () => {
         </div>
       </section>
 
-      {/* Mapa + sidebar */}
       <section className="flex-1 bg-muted/30">
         <div className="container mx-auto py-10">
           <div className="grid lg:grid-cols-[320px_1fr] gap-6">
-            {/* Sidebar filtros */}
             <aside className="space-y-5">
               <div className="bg-card border border-border rounded-2xl p-5 shadow-soft">
                 <div className="flex items-center gap-2 mb-4">
@@ -172,7 +134,6 @@ const Mapa = () => {
               </div>
             </aside>
 
-            {/* Mapa */}
             <div className="bg-card border border-border rounded-2xl shadow-card overflow-hidden">
               <div className="px-5 py-4 border-b border-border flex items-center justify-between flex-wrap gap-3">
                 <div>
@@ -187,40 +148,11 @@ const Mapa = () => {
               </div>
 
               <div className="h-[560px] w-full">
-                <MapContainer
-                  center={[-41.4689, -72.9411]}
-                  zoom={12}
-                  scrollWheelZoom
-                  className="h-full w-full"
-                >
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
-                  {visibles.map((r) => (
-                    <Marker key={r.id} position={[r.lat, r.lng]} icon={makeIcon(r.type)}>
-                      <Popup>
-                        <div className="min-w-[200px]">
-                          <p className="text-[10px] uppercase tracking-widest font-bold" style={{ color: TYPE_META[r.type].color }}>
-                            {TYPE_META[r.type].label} · {r.id}
-                          </p>
-                          <p className="font-display text-base font-bold mt-1">{r.nombre}</p>
-                          <p className="text-xs text-muted-foreground">{r.especie} · {r.zona}</p>
-                          <p className="text-xs mt-2">{r.descripcion}</p>
-                          <p className="text-[10px] text-muted-foreground mt-2">{r.fecha}</p>
-                          <Link to="/reportar" className="inline-block mt-3 text-xs font-semibold text-primary hover:underline">
-                            Tengo información →
-                          </Link>
-                        </div>
-                      </Popup>
-                    </Marker>
-                  ))}
-                </MapContainer>
+                <InteractiveReportMap reportes={visibles} typeMeta={TYPE_META} />
               </div>
             </div>
           </div>
 
-          {/* Lista de reportes */}
           <div className="mt-8">
             <h2 className="font-display text-2xl font-bold mb-4">Reportes recientes</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
