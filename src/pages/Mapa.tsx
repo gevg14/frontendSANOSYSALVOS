@@ -2,14 +2,14 @@ import { useMemo, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { MapPin, AlertCircle, Search as SearchIcon, Heart, PawPrint, Filter } from "lucide-react";
+import { MapPin, AlertCircle, Search as SearchIcon, PawPrint, Filter } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-type ReportType = "perdida" | "encontrada" | "urgente" | "adopcion";
+type ReportType = "perdida" | "encontrada" | "urgente";
 
 interface Reporte {
   id: string;
@@ -27,18 +27,15 @@ const REPORTES: Reporte[] = [
   { id: "R-482", type: "urgente",    nombre: "Perro herido",  especie: "Perro", zona: "Av. Costanera",   fecha: "Hoy 10:24",   descripcion: "Mestizo café, herido en pata trasera. Necesita atención veterinaria urgente.", lat: -41.4689, lng: -72.9411 },
   { id: "R-483", type: "perdida",    nombre: "Toby",          especie: "Perro", zona: "Pelluco",         fecha: "Hoy 09:10",   descripcion: "Labrador dorado con collar rojo. Responde a su nombre.",                       lat: -41.4612, lng: -72.9203 },
   { id: "R-484", type: "encontrada", nombre: "Gatito blanco", especie: "Gato",  zona: "Centro",          fecha: "Ayer",        descripcion: "Encontrado cerca de la plaza, muy cariñoso, sin chip.",                        lat: -41.4717, lng: -72.9360 },
-  { id: "R-485", type: "adopcion",   nombre: "Luna",          especie: "Gata",  zona: "Refugio Alerce",  fecha: "Hace 2 días", descripcion: "Hembra esterilizada, vacunas al día. Busca hogar tranquilo.",                  lat: -41.3825, lng: -72.8830 },
   { id: "R-486", type: "perdida",    nombre: "Copito",        especie: "Perro", zona: "Mirasol",         fecha: "Hoy 07:45",   descripcion: "Poodle blanco pequeño, salió por portón abierto.",                             lat: -41.4901, lng: -72.9580 },
   { id: "R-487", type: "encontrada", nombre: "Perrito negro", especie: "Perro", zona: "Puerto Varas",    fecha: "Hoy 11:30",   descripcion: "Encontrado en la costanera, dócil, parece haber estado perdido varios días.",  lat: -41.3197, lng: -72.9853 },
   { id: "R-488", type: "urgente",    nombre: "Camada gatos",  especie: "Gato",  zona: "Chinquihue",      fecha: "Hoy 08:00",   descripcion: "4 gatitos abandonados, necesitan refugio inmediato.",                          lat: -41.5102, lng: -73.0210 },
-  { id: "R-489", type: "adopcion",   nombre: "Rocco",         especie: "Perro", zona: "Refugio Sur",     fecha: "Hace 5 días", descripcion: "Mestizo grande, juguetón y bueno con niños.",                                  lat: -41.4530, lng: -72.9050 },
 ];
 
 const TYPE_META: Record<ReportType, { label: string; color: string; icon: typeof AlertCircle }> = {
   urgente:    { label: "Urgente",    color: "hsl(var(--destructive))", icon: AlertCircle },
   perdida:    { label: "Perdida",    color: "hsl(var(--primary))",     icon: SearchIcon },
   encontrada: { label: "Encontrada", color: "hsl(var(--secondary))",   icon: PawPrint },
-  adopcion:   { label: "Adopción",   color: "hsl(var(--accent))",      icon: Heart },
 };
 
 const makeIcon = (type: ReportType) => {
@@ -62,7 +59,7 @@ const makeIcon = (type: ReportType) => {
 
 const Mapa = () => {
   const [filters, setFilters] = useState<Record<ReportType, boolean>>({
-    urgente: true, perdida: true, encontrada: true, adopcion: true,
+    urgente: true, perdida: true, encontrada: true,
   });
   const [query, setQuery] = useState("");
 
@@ -80,7 +77,7 @@ const Mapa = () => {
   );
 
   const counts = useMemo(() => {
-    const c: Record<ReportType, number> = { urgente: 0, perdida: 0, encontrada: 0, adopcion: 0 };
+    const c: Record<ReportType, number> = { urgente: 0, perdida: 0, encontrada: 0 };
     REPORTES.forEach((r) => (c[r.type] += 1));
     return c;
   }, []);
@@ -102,7 +99,7 @@ const Mapa = () => {
               Mapa de reportes en tiempo real
             </h1>
             <p className="text-lg text-primary-foreground/80 mt-4">
-              Visualiza mascotas perdidas, encontradas, en adopción y casos urgentes cerca de ti.
+              Visualiza mascotas perdidas, encontradas y casos urgentes cerca de ti.
               Cada punto representa un reporte de la comunidad.
             </p>
           </div>
