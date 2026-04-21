@@ -12,6 +12,7 @@ const Navbar = () => {
     { to: "/", label: "Inicio" },
     { to: "/adopciones", label: "Adopciones" },
     { to: "/reportar", label: "Reportar" },
+    { to: "/mapa", label: "Mapa" },
     { to: "/donaciones", label: "Donar" },
     { to: "/nosotros", label: "Nosotros" },
   ];
