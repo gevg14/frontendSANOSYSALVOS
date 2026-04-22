@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import {
   LayoutDashboard, PawPrint, Heart, MapPin, HandHeart, Bell, Stethoscope,
@@ -212,7 +212,7 @@ const Table = ({ headers, rows }: { headers: string[]; rows: (string | JSX.Eleme
 );
 
 type BadgeTone = "secondary" | "primary" | "accent" | "destructive";
-const Badge = ({ children, tone = "secondary" }: { children: React.ReactNode; tone?: BadgeTone }) => {
+const Badge = ({ children, tone = "secondary" }: { children: ReactNode; tone?: BadgeTone }) => {
   const tones: Record<BadgeTone, string> = {
     secondary: "bg-secondary-soft text-secondary",
     primary: "bg-primary/10 text-primary",
