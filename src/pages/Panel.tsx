@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   LayoutDashboard, PawPrint, Heart, MapPin, HandHeart, Bell, Stethoscope,
-  Users, Search, ArrowUpRight, CheckCircle2, Clock, AlertCircle, LogOut
+  Users, Search, ArrowUpRight, CheckCircle2, Clock, AlertCircle, LogOut,
+  type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -102,7 +103,15 @@ const Panel = () => {
 
 /* ============ Sections ============ */
 
-const Stat = ({ icon: Icon, label, value, delta, accent = "primary" }: any) => (
+type StatAccent = "primary" | "secondary" | "accent";
+interface StatProps {
+  icon: LucideIcon;
+  label: string;
+  value: string;
+  delta: string;
+  accent?: StatAccent;
+}
+const Stat = ({ icon: Icon, label, value, delta, accent = "primary" }: StatProps) => (
   <div className="bg-card border border-border rounded-2xl p-6 shadow-soft hover:shadow-card transition-smooth">
     <div className="flex items-start justify-between">
       <div className={`h-11 w-11 rounded-xl grid place-items-center ${accent === "primary" ? "bg-primary/10 text-primary" : accent === "secondary" ? "bg-secondary-soft text-secondary" : "bg-accent-soft text-accent"}`}>
@@ -202,8 +211,9 @@ const Table = ({ headers, rows }: { headers: string[]; rows: (string | JSX.Eleme
   </div>
 );
 
-const Badge = ({ children, tone = "secondary" }: any) => {
-  const tones: any = {
+type BadgeTone = "secondary" | "primary" | "accent" | "destructive";
+const Badge = ({ children, tone = "secondary" }: { children: React.ReactNode; tone?: BadgeTone }) => {
+  const tones: Record<BadgeTone, string> = {
     secondary: "bg-secondary-soft text-secondary",
     primary: "bg-primary/10 text-primary",
     accent: "bg-accent-soft text-accent",
