@@ -3,11 +3,11 @@ import { ArrowRight, Heart, MapPin, Search, Shield, Sparkles, PawPrint, HandHear
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import heroPets from "@/assets/hero-pets.jpg";
-import pet1 from "@/assets/pet-1.jpg";
-import pet2 from "@/assets/pet-2.jpg";
-import pet3 from "@/assets/pet-3.jpg";
-import pet4 from "@/assets/pet-4.jpg";
+import heroPets from "@/assets/logo.png";
+import pet1 from "@/assets/Luka.jpeg";
+import pet2 from "@/assets/Lia.jpeg";
+import pet3 from "@/assets/Kitty.jpeg";
+import pet4 from "@/assets/Kira.jpeg";
 
 const stats = [
   { n: "1.240", l: "Mascotas reunidas" },
@@ -24,10 +24,10 @@ const services = [
 ];
 
 const adoptables = [
-  { img: pet1, name: "Toby", age: "3 años", tag: "Cariñoso" },
-  { img: pet2, name: "Luna", age: "4 meses", tag: "Juguetona" },
-  { img: pet3, name: "Copito", age: "2 meses", tag: "Tímido" },
-  { img: pet4, name: "Mango", age: "2 años", tag: "Tranquilo" },
+  { img: pet1, name: "Luka", age: "4 meses", tag: "Juguetón" },
+  { img: pet2, name: "Lia", age: "4 meses", tag: "Enojona" },
+  { img: pet3, name: "Kitty", age: "1 año", tag: "Dócil" },
+  { img: pet4, name: "Kira", age: "4 meses", tag: "Tímida" },
 ];
 
 const Index = () => {
