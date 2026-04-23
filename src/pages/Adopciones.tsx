@@ -4,18 +4,26 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import pet1 from "@/assets/pet-1.jpg";
-import pet2 from "@/assets/pet-2.jpg";
-import pet3 from "@/assets/pet-3.jpg";
-import pet4 from "@/assets/pet-4.jpg";
+import pet1 from "@/assets/Luka.jpeg";
+import pet2 from "@/assets/Lia.jpeg";
+import pet3 from "@/assets/Kitty.jpeg";
+import pet4 from "@/assets/Kira.jpeg";
+import pet5 from "@/assets/Bobby.jpeg";
+import pet6 from "@/assets/Dominique.jpeg";
+import pet7 from "@/assets/Bob.jpeg";
+import pet8 from "@/assets/Kira_A.jpeg";
+import pet9 from "@/assets/Dominga.jpeg";
 
 const PETS = [
-  { id: 1, img: pet1, name: "Toby", age: "3 años", tipo: "Perro", sexo: "Macho", zona: "Puerto Montt", tag: "Cariñoso", desc: "Mestizo amistoso, ideal para familia con jardín." },
-  { id: 2, img: pet2, name: "Luna", age: "4 meses", tipo: "Gato", sexo: "Hembra", zona: "Angelmó", tag: "Juguetona", desc: "Gatita curiosa que adora trepar y dormir contigo." },
-  { id: 3, img: pet3, name: "Copito", age: "2 meses", tipo: "Perro", sexo: "Macho", zona: "Alerce", tag: "Tímido", desc: "Cachorrito que necesita una familia paciente." },
-  { id: 4, img: pet4, name: "Mango", age: "2 años", tipo: "Gato", sexo: "Macho", zona: "Pelluco", tag: "Tranquilo", desc: "Gato adulto vacunado y esterilizado." },
-  { id: 5, img: pet1, name: "Rocco", age: "5 años", tipo: "Perro", sexo: "Macho", zona: "Mirasol", tag: "Activo", desc: "Le encantan los paseos largos por la costa." },
-  { id: 6, img: pet2, name: "Misha", age: "1 año", tipo: "Gato", sexo: "Hembra", zona: "Centro", tag: "Cariñosa", desc: "Esteriliza y al día con sus vacunas." },
+  { id: 1, img: pet1, name: "Luka", age: "4 meses", tipo: "Perro", sexo: "Macho", zona: "Puerto Montt", tag: "Juguetón", desc: "Le gusta jugar con sus seres queridos." },
+  { id: 2, img: pet2, name: "Lia", age: "4 meses", tipo: "Gato", sexo: "Hembra", zona: "Pta Sur", tag: "Enojona", desc: "Gatita enojona con los demás pero con sus seres queridos es buena." },
+  { id: 3, img: pet3, name: "Kitty", age: "1 año", tipo: "Gato", sexo: "Hembra", zona: "Alerce", tag: "Dócil", desc: "Gatita súper dócil, le gusta dormir." },
+  { id: 4, img: pet4, name: "Kira", age: "4 meses", tipo: "Perro", sexo: "Hembra", zona: "Pelluco", tag: "Tímida", desc: "Perrita tímida cuando no se siente en confianza pero es muy cariñosa." },
+  { id: 5, img: pet5, name: "Bobby", age: "9 años", tipo: "Perro", sexo: "Macho", zona: "Mirasol", tag: "Dormilón", desc: "Le encanta dormir pero es cariñoso." },
+  { id: 6, img: pet6, name: "Dominique", age: "4 años", tipo: "Gato", sexo: "Hembra", zona: "Mirasol", tag: "Regalona", desc: "Le encantan los cariños y también es intensa." },
+  { id: 7, img: pet7, name: "Bob", age: "5 años", tipo: "Perro", sexo: "Macho", zona: "Mirasol", tag: "Loco", desc: "Bob es un perro loco, le gusta mucho llamar la atención." },
+  { id: 8, img: pet8, name: "Kira", age: "5 años", tipo: "Perro", sexo: "Hembra", zona: "Mirasol", tag: "Mañosa", desc: "Kira es mañosa porque no hace caso a lo que uno le dice." },
+  { id: 9, img: pet9, name: "Dominga", age: "4 años", tipo: "Perro", sexo: "Hembra", zona: "Mirasol", tag: "Brava", desc: "Dominga es brava con personas que no son cercanas a su dueño/a, pero adorable con su círculo." },
 ];
 
 const Adopciones = () => {
