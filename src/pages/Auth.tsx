@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -30,6 +30,8 @@ const redirectByRole = async (userId: string, navigate: (p: string) => void) => 
 
 const Auth = () => {
   const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const isAdminPortal = params.get("role") === "admin";
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ email: "", password: "", nombre: "", telefono: "" });
