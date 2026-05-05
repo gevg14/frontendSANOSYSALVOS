@@ -121,12 +121,21 @@ const Auth = () => {
           </div>
 
           <div>
+            {isAdminPortal && (
+              <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary mb-3">
+                Portal administrador
+              </span>
+            )}
             <h1 className="font-display text-3xl font-bold">
-              {mode === "login" ? "Inicia sesión" : "Crea tu cuenta"}
+              {mode === "login"
+                ? isAdminPortal ? "Acceso staff" : "Inicia sesión"
+                : "Crea tu cuenta"}
             </h1>
             <p className="text-muted-foreground mt-1 text-sm">
               {mode === "login"
-                ? "Accede al panel staff o a tu cuenta de cliente."
+                ? isAdminPortal
+                  ? "Solo cuentas con rol administrador podrán acceder al panel."
+                  : "Accede a tu cuenta de cliente."
                 : "Regístrate como cliente para adoptar y reportar."}
             </p>
           </div>
