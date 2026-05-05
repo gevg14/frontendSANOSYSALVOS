@@ -46,7 +46,7 @@ const Navbar = () => {
 
         <div className="hidden lg:flex items-center gap-2">
           <Button asChild variant="ghost" size="sm">
-            <Link to="/panel">Acceso trabajadores</Link>
+            <Link to="/auth">Iniciar sesión</Link>
           </Button>
           <Button asChild variant="hero" size="sm">
             <Link to="/reportar"><PawPrint className="mr-1.5 h-4 w-4" />Reportar mascota</Link>
@@ -66,8 +66,8 @@ const Navbar = () => {
                 {l.label}
               </Link>
             ))}
-            <Link to="/panel" onClick={() => setOpen(false)} className="px-4 py-3 rounded-lg hover:bg-muted text-sm font-medium">
-              Acceso trabajadores
+            <Link to="/auth" onClick={() => setOpen(false)} className="px-4 py-3 rounded-lg hover:bg-muted text-sm font-medium">
+              Iniciar sesión
             </Link>
             <Button asChild variant="hero" className="mt-2"><Link to="/reportar">Reportar mascota</Link></Button>
           </div>
