@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -30,6 +30,8 @@ const redirectByRole = async (userId: string, navigate: (p: string) => void) => 
 
 const Auth = () => {
   const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const isAdminPortal = params.get("role") === "admin";
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ email: "", password: "", nombre: "", telefono: "" });
@@ -119,12 +121,21 @@ const Auth = () => {
           </div>
 
           <div>
+            {isAdminPortal && (
+              <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary mb-3">
+                Portal administrador
+              </span>
+            )}
             <h1 className="font-display text-3xl font-bold">
-              {mode === "login" ? "Inicia sesión" : "Crea tu cuenta"}
+              {mode === "login"
+                ? isAdminPortal ? "Acceso staff" : "Inicia sesión"
+                : "Crea tu cuenta"}
             </h1>
             <p className="text-muted-foreground mt-1 text-sm">
               {mode === "login"
-                ? "Accede al panel staff o a tu cuenta de cliente."
+                ? isAdminPortal
+                  ? "Solo cuentas con rol administrador podrán acceder al panel."
+                  : "Accede a tu cuenta de cliente."
                 : "Regístrate como cliente para adoptar y reportar."}
             </p>
           </div>
