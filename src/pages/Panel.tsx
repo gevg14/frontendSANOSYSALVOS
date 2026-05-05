@@ -94,9 +94,9 @@ const Panel = () => {
               <p className="text-xs text-sidebar-foreground/60">Refugio Centro</p>
             </div>
           </div>
-          <Link to="/" className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-smooth">
+          <button onClick={handleLogout} className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-smooth">
             <LogOut className="h-4 w-4" /> Salir
-          </Link>
+          </button>
         </div>
       </aside>
 
