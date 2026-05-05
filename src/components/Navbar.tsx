@@ -46,7 +46,10 @@ const Navbar = () => {
 
         <div className="hidden lg:flex items-center gap-2">
           <Button asChild variant="ghost" size="sm">
-            <Link to="/auth">Iniciar sesión</Link>
+            <Link to="/auth?role=cliente">Iniciar sesión cliente</Link>
+          </Button>
+          <Button asChild variant="outline" size="sm">
+            <Link to="/auth?role=admin">Acceso administrador</Link>
           </Button>
           <Button asChild variant="hero" size="sm">
             <Link to="/reportar"><PawPrint className="mr-1.5 h-4 w-4" />Reportar mascota</Link>
