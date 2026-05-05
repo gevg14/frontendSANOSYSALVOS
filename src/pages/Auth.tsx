@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
-import { PawPrint } from "lucide-react";
+import { PawPrint, ShieldCheck, User } from "lucide-react";
 import logo from "@/assets/logo.png";
 
 const loginSchema = z.object({
@@ -19,28 +19,39 @@ const signupSchema = loginSchema.extend({
   telefono: z.string().trim().min(6, "Teléfono inválido").max(20),
 });
 
-const redirectByRole = async (userId: string, navigate: (p: string) => void) => {
+type Role = "cliente" | "admin";
+
+const getUserIsAdmin = async (userId: string) => {
   const { data } = await supabase
     .from("user_roles")
     .select("role")
     .eq("user_id", userId);
-  const isAdmin = data?.some((r) => r.role === "admin");
-  navigate(isAdmin ? "/panel" : "/");
+  return !!data?.some((r) => r.role === "admin");
 };
 
 const Auth = () => {
   const navigate = useNavigate();
-  const [params] = useSearchParams();
-  const isAdminPortal = params.get("role") === "admin";
+  const [params, setParams] = useSearchParams();
+  const initialRole: Role = params.get("role") === "admin" ? "admin" : "cliente";
+  const [role, setRole] = useState<Role>(initialRole);
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ email: "", password: "", nombre: "", telefono: "" });
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) redirectByRole(session.user.id, navigate);
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (session?.user) {
+        const isAdmin = await getUserIsAdmin(session.user.id);
+        navigate(isAdmin ? "/panel" : "/", { replace: true });
+      }
     });
   }, [navigate]);
+
+  const switchRole = (r: Role) => {
+    setRole(r);
+    setParams({ role: r });
+    if (r === "admin") setMode("login");
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,9 +68,33 @@ const Auth = () => {
           password: parsed.data.password,
         });
         if (error) throw error;
+        if (!data.user) throw new Error("No se pudo iniciar sesión");
+
+        const isAdmin = await getUserIsAdmin(data.user.id);
+
+        // Validate selected role matches actual role
+        if (role === "admin" && !isAdmin) {
+          await supabase.auth.signOut();
+          toast({
+            title: "Acceso denegado",
+            description: "Esta cuenta no tiene permisos de administrador.",
+            variant: "destructive",
+          });
+          return;
+        }
+        if (role === "cliente" && isAdmin) {
+          toast({
+            title: "Cuenta administrador",
+            description: "Te redirigimos al panel administrativo.",
+          });
+          navigate("/panel", { replace: true });
+          return;
+        }
+
         toast({ title: "¡Bienvenido!" });
-        if (data.user) await redirectByRole(data.user.id, navigate);
+        navigate(isAdmin ? "/panel" : "/", { replace: true });
       } else {
+        // Signup solo para clientes
         const parsed = signupSchema.safeParse(form);
         if (!parsed.success) {
           toast({ title: "Error", description: parsed.error.errors[0].message, variant: "destructive" });
@@ -75,7 +110,7 @@ const Auth = () => {
         });
         if (error) throw error;
         toast({ title: "¡Cuenta creada!", description: "Sesión iniciada como cliente." });
-        if (data.user) await redirectByRole(data.user.id, navigate);
+        if (data.user) navigate("/", { replace: true });
       }
     } catch (err: any) {
       toast({
@@ -91,6 +126,8 @@ const Auth = () => {
       setLoading(false);
     }
   };
+
+  const isAdminPortal = role === "admin";
 
   return (
     <div className="min-h-screen grid lg:grid-cols-2 bg-background">
@@ -118,6 +155,32 @@ const Auth = () => {
               <img src={logo} alt="" className="h-10 w-10" />
               <span className="font-display text-lg font-bold">Sanos y Salvos</span>
             </Link>
+          </div>
+
+          {/* Role selector */}
+          <div className="grid grid-cols-2 gap-2 p-1 bg-muted rounded-xl">
+            <button
+              type="button"
+              onClick={() => switchRole("cliente")}
+              className={`flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition-smooth ${
+                role === "cliente"
+                  ? "bg-background shadow-soft text-primary"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <User className="h-4 w-4" /> Soy cliente
+            </button>
+            <button
+              type="button"
+              onClick={() => switchRole("admin")}
+              className={`flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition-smooth ${
+                role === "admin"
+                  ? "bg-background shadow-soft text-primary"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <ShieldCheck className="h-4 w-4" /> Soy administrador
+            </button>
           </div>
 
           <div>
@@ -193,15 +256,22 @@ const Auth = () => {
             </Button>
           </form>
 
-          <p className="text-sm text-center text-muted-foreground">
-            {mode === "login" ? "¿No tienes cuenta?" : "¿Ya tienes cuenta?"}{" "}
-            <button
-              onClick={() => setMode(mode === "login" ? "signup" : "login")}
-              className="font-semibold text-primary hover:underline"
-            >
-              {mode === "login" ? "Regístrate" : "Inicia sesión"}
-            </button>
-          </p>
+          {!isAdminPortal && (
+            <p className="text-sm text-center text-muted-foreground">
+              {mode === "login" ? "¿No tienes cuenta?" : "¿Ya tienes cuenta?"}{" "}
+              <button
+                onClick={() => setMode(mode === "login" ? "signup" : "login")}
+                className="font-semibold text-primary hover:underline"
+              >
+                {mode === "login" ? "Regístrate" : "Inicia sesión"}
+              </button>
+            </p>
+          )}
+          {isAdminPortal && (
+            <p className="text-xs text-center text-muted-foreground">
+              El registro de administradores se realiza internamente.
+            </p>
+          )}
         </div>
       </div>
     </div>
