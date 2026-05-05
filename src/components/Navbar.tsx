@@ -69,8 +69,11 @@ const Navbar = () => {
                 {l.label}
               </Link>
             ))}
-            <Link to="/auth" onClick={() => setOpen(false)} className="px-4 py-3 rounded-lg hover:bg-muted text-sm font-medium">
-              Iniciar sesión
+            <Link to="/auth?role=cliente" onClick={() => setOpen(false)} className="px-4 py-3 rounded-lg hover:bg-muted text-sm font-medium">
+              Iniciar sesión cliente
+            </Link>
+            <Link to="/auth?role=admin" onClick={() => setOpen(false)} className="px-4 py-3 rounded-lg hover:bg-muted text-sm font-medium">
+              Acceso administrador
             </Link>
             <Button asChild variant="hero" className="mt-2"><Link to="/reportar">Reportar mascota</Link></Button>
           </div>
