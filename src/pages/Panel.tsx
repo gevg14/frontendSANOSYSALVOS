@@ -1,5 +1,5 @@
-import { useState, type ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState, type ReactNode } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard, PawPrint, Heart, MapPin, HandHeart, Bell, Stethoscope,
   Users, Search, ArrowUpRight, CheckCircle2, Clock, AlertCircle, LogOut,
@@ -7,6 +7,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
 import logo from "@/assets/logo.png";
 
 type Section = "dashboard" | "mascotas" | "adopciones" | "coincidencias" | "geo" | "donaciones" | "historial" | "notif";
@@ -23,7 +25,40 @@ const navItems: { id: Section; label: string; icon: typeof Heart }[] = [
 ];
 
 const Panel = () => {
+  const navigate = useNavigate();
   const [active, setActive] = useState<Section>("dashboard");
+  const [checking, setChecking] = useState(true);
+
+  useEffect(() => {
+    const check = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        navigate("/auth");
+        return;
+      }
+      const { data } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", session.user.id);
+      const isAdmin = data?.some((r) => r.role === "admin");
+      if (!isAdmin) {
+        toast({ title: "Acceso denegado", description: "Solo administradores.", variant: "destructive" });
+        navigate("/");
+        return;
+      }
+      setChecking(false);
+    };
+    check();
+  }, [navigate]);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate("/auth");
+  };
+
+  if (checking) {
+    return <div className="min-h-screen grid place-items-center text-muted-foreground">Verificando acceso...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-muted/30 flex">
@@ -59,9 +94,9 @@ const Panel = () => {
               <p className="text-xs text-sidebar-foreground/60">Refugio Centro</p>
             </div>
           </div>
-          <Link to="/" className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-smooth">
+          <button onClick={handleLogout} className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-smooth">
             <LogOut className="h-4 w-4" /> Salir
-          </Link>
+          </button>
         </div>
       </aside>
 
