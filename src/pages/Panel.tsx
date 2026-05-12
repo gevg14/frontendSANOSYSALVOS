@@ -1,5 +1,5 @@
-import { useEffect, useState, type ReactNode } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, type ReactNode } from "react";
+import { Link } from "react-router-dom";
 import {
   LayoutDashboard, PawPrint, Heart, MapPin, HandHeart, Bell, Stethoscope,
   Users, Search, ArrowUpRight, CheckCircle2, Clock, AlertCircle, LogOut,
@@ -7,8 +7,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "@/hooks/use-toast";
 import logo from "@/assets/logo.png";
 
 type Section = "dashboard" | "mascotas" | "adopciones" | "coincidencias" | "geo" | "donaciones" | "historial" | "notif";
@@ -94,9 +92,9 @@ const Panel = () => {
               <p className="text-xs text-sidebar-foreground/60">Refugio Centro</p>
             </div>
           </div>
-          <button onClick={handleLogout} className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-smooth">
+          <Link to="/" className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-smooth">
             <LogOut className="h-4 w-4" /> Salir
-          </button>
+          </Link>
         </div>
       </aside>
 
