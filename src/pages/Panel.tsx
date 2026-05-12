@@ -26,21 +26,6 @@ import logo from "@/assets/logo.png";
 
 type Section = "dashboard" | "mascotas" | "adopciones" | "coincidencias" | "geo" | "donaciones" | "historial" | "notif";
 
-const navItems: { id: Section; label: string; icon: typeof Heart }[] = [
-  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { id: "mascotas", label: "Mascotas", icon: PawPrint },
-  { id: "adopciones", label: "Adopciones", icon: Heart },
-  { id: "coincidencias", label: "Coincidencias", icon: Search },
-  { id: "geo", label: "Geolocalización", icon: MapPin },
-  { id: "donaciones", label: "Donaciones", icon: HandHeart },
-  { id: "historial", label: "Historial médico", icon: Stethoscope },
-  { id: "notif", label: "Notificaciones", icon: Bell },
-];
-
-const Panel = () => {
-  const [active, setActive] = useState<Section>("dashboard");
-
-
 const navGroups: { label: string; items: { id: Section; label: string; icon: typeof Heart }[] }[] = [
   {
     label: "General",
