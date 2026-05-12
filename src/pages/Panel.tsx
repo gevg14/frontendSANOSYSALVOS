@@ -182,7 +182,8 @@ const Panel = () => {
           {active === "notif" && <Notificaciones />}
         </div>
       </main>
-    </div>
+      </div>
+    </SidebarProvider>
   );
 };
 
