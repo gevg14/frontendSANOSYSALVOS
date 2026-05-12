@@ -45,12 +45,6 @@ const Navbar = () => {
         </div>
 
         <div className="hidden lg:flex items-center gap-2">
-          <Button asChild variant="ghost" size="sm">
-            <Link to="/auth?role=cliente">Iniciar sesión cliente</Link>
-          </Button>
-          <Button asChild variant="outline" size="sm">
-            <Link to="/auth?role=admin">Acceso administrador</Link>
-          </Button>
           <Button asChild variant="hero" size="sm">
             <Link to="/reportar"><PawPrint className="mr-1.5 h-4 w-4" />Reportar mascota</Link>
           </Button>
@@ -69,12 +63,6 @@ const Navbar = () => {
                 {l.label}
               </Link>
             ))}
-            <Link to="/auth?role=cliente" onClick={() => setOpen(false)} className="px-4 py-3 rounded-lg hover:bg-muted text-sm font-medium">
-              Iniciar sesión cliente
-            </Link>
-            <Link to="/auth?role=admin" onClick={() => setOpen(false)} className="px-4 py-3 rounded-lg hover:bg-muted text-sm font-medium">
-              Acceso administrador
-            </Link>
             <Button asChild variant="hero" className="mt-2"><Link to="/reportar">Reportar mascota</Link></Button>
           </div>
         </div>

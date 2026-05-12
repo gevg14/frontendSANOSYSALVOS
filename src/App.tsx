@@ -10,7 +10,6 @@ import Donaciones from "./pages/Donaciones.tsx";
 import Nosotros from "./pages/Nosotros.tsx";
 import Panel from "./pages/Panel.tsx";
 import Mapa from "./pages/Mapa.tsx";
-import Auth from "./pages/Auth.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 
@@ -30,7 +29,7 @@ const App = () => (
           <Route path="/nosotros" element={<Nosotros />} />
           <Route path="/panel" element={<Panel />} />
           <Route path="/mapa" element={<Mapa />} />
-          <Route path="/auth" element={<Auth />} />
+          
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
