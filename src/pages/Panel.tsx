@@ -7,87 +7,156 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger,
+  useSidebar,
+} from "@/components/ui/sidebar";
 import logo from "@/assets/logo.png";
 
 type Section = "dashboard" | "mascotas" | "adopciones" | "coincidencias" | "geo" | "donaciones" | "historial" | "notif";
 
-const navItems: { id: Section; label: string; icon: typeof Heart }[] = [
-  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { id: "mascotas", label: "Mascotas", icon: PawPrint },
-  { id: "adopciones", label: "Adopciones", icon: Heart },
-  { id: "coincidencias", label: "Coincidencias", icon: Search },
-  { id: "geo", label: "Geolocalización", icon: MapPin },
-  { id: "donaciones", label: "Donaciones", icon: HandHeart },
-  { id: "historial", label: "Historial médico", icon: Stethoscope },
-  { id: "notif", label: "Notificaciones", icon: Bell },
+const navGroups: { label: string; items: { id: Section; label: string; icon: typeof Heart }[] }[] = [
+  {
+    label: "General",
+    items: [
+      { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+    ],
+  },
+  {
+    label: "Gestión",
+    items: [
+      { id: "mascotas", label: "Mascotas", icon: PawPrint },
+      { id: "adopciones", label: "Adopciones", icon: Heart },
+      { id: "coincidencias", label: "Coincidencias", icon: Search },
+    ],
+  },
+  {
+    label: "Operaciones",
+    items: [
+      { id: "geo", label: "Geolocalización", icon: MapPin },
+      { id: "donaciones", label: "Donaciones", icon: HandHeart },
+      { id: "historial", label: "Historial médico", icon: Stethoscope },
+    ],
+  },
+  {
+    label: "Comunicación",
+    items: [
+      { id: "notif", label: "Notificaciones", icon: Bell },
+    ],
+  },
 ];
+
+const allItems = navGroups.flatMap((g) => g.items);
+
+const AdminSidebar = ({ active, setActive }: { active: Section; setActive: (s: Section) => void }) => {
+  const { state } = useSidebar();
+  const collapsed = state === "collapsed";
+  return (
+    <Sidebar collapsible="icon" className="border-r border-sidebar-border">
+      <SidebarHeader className="border-b border-sidebar-border">
+        <Link to="/" className="flex items-center gap-3 px-2 py-2">
+          <img src={logo} alt="" className="h-9 w-9 bg-background rounded-lg p-1 shrink-0" />
+          {!collapsed && (
+            <div className="min-w-0">
+              <p className="font-display font-bold truncate">Sanos y Salvos</p>
+              <p className="text-[10px] uppercase tracking-widest text-sidebar-foreground/60">Panel staff</p>
+            </div>
+          )}
+        </Link>
+      </SidebarHeader>
+      <SidebarContent>
+        {navGroups.map((group) => (
+          <SidebarGroup key={group.label}>
+            {!collapsed && <SidebarGroupLabel>{group.label}</SidebarGroupLabel>}
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {group.items.map((item) => (
+                  <SidebarMenuItem key={item.id}>
+                    <SidebarMenuButton
+                      isActive={active === item.id}
+                      onClick={() => setActive(item.id)}
+                      tooltip={item.label}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.label}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
+      </SidebarContent>
+      <SidebarFooter className="border-t border-sidebar-border">
+        {!collapsed && (
+          <div className="flex items-center gap-3 px-2 py-2">
+            <div className="h-9 w-9 rounded-full bg-accent text-accent-foreground grid place-items-center font-bold text-xs shrink-0">VL</div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold truncate">Vet. Laura</p>
+              <p className="text-xs text-sidebar-foreground/60 truncate">Refugio Centro</p>
+            </div>
+          </div>
+        )}
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="Salir">
+              <Link to="/">
+                <LogOut className="h-4 w-4" />
+                <span>Salir</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+    </Sidebar>
+  );
+};
 
 const Panel = () => {
   const [active, setActive] = useState<Section>("dashboard");
-
+  const activeLabel = allItems.find((n) => n.id === active)?.label;
 
   return (
-    <div className="min-h-screen bg-muted/30 flex">
-      {/* Sidebar */}
-      <aside className="w-64 bg-sidebar text-sidebar-foreground flex flex-col sticky top-0 h-screen">
-        <Link to="/" className="flex items-center gap-3 p-6 border-b border-sidebar-border">
-          <img src={logo} alt="" className="h-10 w-10 bg-background rounded-lg p-1" />
-          <div>
-            <p className="font-display font-bold">Sanos y Salvos</p>
-            <p className="text-[10px] uppercase tracking-widest text-sidebar-foreground/60">Panel staff</p>
-          </div>
-        </Link>
-        <nav className="flex-1 p-3 space-y-1">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => setActive(item.id)}
-              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-smooth ${
-                active === item.id
-                  ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-soft"
-                  : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground"
-              }`}
-            >
-              <item.icon className="h-4 w-4" /> {item.label}
-            </button>
-          ))}
-        </nav>
-        <div className="p-4 border-t border-sidebar-border">
-          <div className="flex items-center gap-3 px-2 mb-3">
-            <div className="h-9 w-9 rounded-full bg-accent text-accent-foreground grid place-items-center font-bold text-xs">VL</div>
-            <div className="flex-1">
-              <p className="text-sm font-semibold">Vet. Laura</p>
-              <p className="text-xs text-sidebar-foreground/60">Refugio Centro</p>
-            </div>
-          </div>
-          <Link to="/" className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-smooth">
-            <LogOut className="h-4 w-4" /> Salir
-          </Link>
-        </div>
-      </aside>
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full bg-muted/30">
+        <AdminSidebar active={active} setActive={setActive} />
 
-      {/* Main */}
-      <main className="flex-1 min-w-0">
-        <header className="bg-background border-b border-border sticky top-0 z-10">
-          <div className="px-8 py-4 flex items-center justify-between gap-4">
-            <div>
-              <p className="text-xs text-muted-foreground">Bienvenida de vuelta</p>
-              <h1 className="font-display text-2xl font-bold capitalize">{navItems.find((n) => n.id === active)?.label}</h1>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="relative hidden md:block">
-                <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                <Input placeholder="Buscar..." className="pl-9 w-72 bg-muted/50 border-0" />
+        {/* Main */}
+        <main className="flex-1 min-w-0">
+          <header className="bg-background border-b border-border sticky top-0 z-10">
+            <div className="px-6 py-4 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <SidebarTrigger />
+                <div>
+                  <p className="text-xs text-muted-foreground">Bienvenida de vuelta</p>
+                  <h1 className="font-display text-2xl font-bold capitalize">{activeLabel}</h1>
+                </div>
               </div>
-              <button className="relative h-10 w-10 grid place-items-center rounded-full hover:bg-muted transition-smooth">
-                <Bell className="h-4 w-4" />
-                <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-destructive" />
-              </button>
+              <div className="flex items-center gap-3">
+                <div className="relative hidden md:block">
+                  <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  <Input placeholder="Buscar..." className="pl-9 w-72 bg-muted/50 border-0" />
+                </div>
+                <button className="relative h-10 w-10 grid place-items-center rounded-full hover:bg-muted transition-smooth">
+                  <Bell className="h-4 w-4" />
+                  <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-destructive" />
+                </button>
+              </div>
             </div>
-          </div>
-        </header>
+          </header>
 
-        <div className="p-8">
+          <div className="p-8">
           {active === "dashboard" && <Dashboard />}
           {active === "mascotas" && <Mascotas />}
           {active === "adopciones" && <Adopciones />}
@@ -98,7 +167,8 @@ const Panel = () => {
           {active === "notif" && <Notificaciones />}
         </div>
       </main>
-    </div>
+      </div>
+    </SidebarProvider>
   );
 };
 
