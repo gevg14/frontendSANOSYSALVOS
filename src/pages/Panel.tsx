@@ -23,40 +23,8 @@ const navItems: { id: Section; label: string; icon: typeof Heart }[] = [
 ];
 
 const Panel = () => {
-  const navigate = useNavigate();
   const [active, setActive] = useState<Section>("dashboard");
-  const [checking, setChecking] = useState(true);
 
-  useEffect(() => {
-    const check = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        navigate("/auth");
-        return;
-      }
-      const { data } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", session.user.id);
-      const isAdmin = data?.some((r) => r.role === "admin");
-      if (!isAdmin) {
-        toast({ title: "Acceso denegado", description: "Solo administradores.", variant: "destructive" });
-        navigate("/");
-        return;
-      }
-      setChecking(false);
-    };
-    check();
-  }, [navigate]);
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    navigate("/auth");
-  };
-
-  if (checking) {
-    return <div className="min-h-screen grid place-items-center text-muted-foreground">Verificando acceso...</div>;
-  }
 
   return (
     <div className="min-h-screen bg-muted/30 flex">
