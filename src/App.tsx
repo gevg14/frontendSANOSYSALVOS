@@ -12,7 +12,7 @@ import Panel from "./pages/Panel.tsx";
 import Mapa from "./pages/Mapa.tsx";
 import Auth from "./pages/Auth.tsx";
 import NotFound from "./pages/NotFound.tsx";
-import AuthGate from "./components/AuthGate.tsx";
+
 
 const queryClient = new QueryClient();
 
@@ -23,7 +23,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<AuthGate><Index /></AuthGate>} />
+          <Route path="/" element={<Index />} />
           <Route path="/adopciones" element={<Adopciones />} />
           <Route path="/reportar" element={<Reportar />} />
           <Route path="/donaciones" element={<Donaciones />} />
